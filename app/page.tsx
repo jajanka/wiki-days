@@ -1,95 +1,93 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useState } from 'react';
+import styles from './page.module.css';
+import { fetchBirthdays } from '@/app/lib/services';
+import useStore from '@/app/providers/store';
+import Pagination from './components/Pagination';
+import Listing from './components/Listing';
+import Modal from './components/Modal';
+import axios, { CancelTokenSource } from 'axios';
+import { geCurrentMonthAndDate, getDateString } from './lib/utils';
+import { WIKI_BIRTH_URL } from './lib/constants';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const setLoading = useStore((state) => state.setLoading);
+  const setBirthdays = useStore((state) => state.setBirthdays);
+  const birthdays = useStore((state) => state.birthdays);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  let cancelToken: CancelTokenSource;
+
+  const handleFetchBirthdays = async () => {
+    setLoading(true);
+
+    if (cancelToken) {
+      cancelToken.cancel('Operation canceled by the user.');
+    }
+
+    cancelToken = axios.CancelToken.source();
+
+    axios
+      .get(`${WIKI_BIRTH_URL}${geCurrentMonthAndDate()}`, {
+        cancelToken: cancelToken.token,
+      })
+      .then((response) => {
+        setBirthdays(response.data);
+        // setBirthdays({ births: [] });
+      })
+      .catch((error) => {
+        setIsModalOpen(true);
+        console.log(error.message);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const onPageChange = (page: number) => {
+    console.log(page, '_page');
+    setCurrentPage(page);
+  };
+
+  return (
+    <>
+      <div
+        className={`${styles.title} ${birthdays && birthdays.births.length > 0 ? styles.hasResults : ''}`}
+      >
+        Notable birthdays on this day
+      </div>
+      {!birthdays && (
+        <div className={styles.container}>
+          <button className="btn btn-full" onClick={handleFetchBirthdays}>
+            Get Birthdays
+          </button>
+          <div className={styles.dateTitle}>{getDateString()}</div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      )}
+
+      {birthdays && birthdays.births.length < 1 && (
+        <div className={styles.container}>
+          <div className={styles.noData}>No data available</div>
+        </div>
+      )}
+
+      {birthdays && birthdays.births.length > 0 && (
+        <>
+          <Listing items={birthdays} pageNumber={currentPage} />
+          <Pagination
+            totalItems={birthdays.births.length}
+            pageNumber={currentPage}
+            onPageChange={onPageChange}
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </>
+      )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Could not fetch birthdays"
+      >
+        <p>There was an error fetching birthdays. Please try again later.</p>
+      </Modal>
+    </>
   );
 }
