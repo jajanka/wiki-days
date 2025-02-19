@@ -5,7 +5,7 @@
   font-weight: 300;
   text-align: center;
 
-  &.hasResults {
+  &.has-results {
     padding: 0;
   }
 }
@@ -18,12 +18,12 @@
   padding: 16px;
 }
 
-.dateTitle {
+.date-title {
   color: #fff9;
   margin-top: 8px;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .title {
     font-size: 48px;
   }

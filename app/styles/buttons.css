@@ -23,7 +23,7 @@
   .btn {
     cursor: pointer;
 
-    &:not([disabled]):not(.disabled) {
+    &:not([disabled], .disabled) {
       &:hover {
         background-color: #babdbf;
       }

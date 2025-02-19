@@ -9,7 +9,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .pagination {
     justify-content: center;
     flex-wrap: wrap;

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styles from './Pagination.module.css';
 import { ITEMS_PER_PAGE } from '@/app/lib/constants';
 

@@ -45,14 +45,13 @@ export default function Home() {
   };
 
   const onPageChange = (page: number) => {
-    console.log(page, '_page');
     setCurrentPage(page);
   };
 
   return (
     <>
       <div
-        className={`${styles.title} ${birthdays && birthdays.births.length > 0 ? styles.hasResults : ''}`}
+        className={`${styles.title} ${birthdays && birthdays.births.length > 0 ? styles['has-results'] : ''}`}
       >
         Notable birthdays on this day
       </div>
@@ -61,7 +60,7 @@ export default function Home() {
           <button className="btn btn-full" onClick={handleFetchBirthdays}>
             Get Birthdays
           </button>
-          <div className={styles.dateTitle}>{getDateString()}</div>
+          <div className={styles['date-title']}>{getDateString()}</div>
         </div>
       )}
 
