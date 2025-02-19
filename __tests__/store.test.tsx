@@ -7,24 +7,23 @@ const mockBeforeSort = {
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 1995,
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 2005,
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 1996,
       text: 'Test',
       pages: [],
     },
   ],
 };
-
 
 const mockAfterSort = {
   births: [
@@ -33,17 +32,17 @@ const mockAfterSort = {
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 2000,
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 1996,
       text: 'Test',
       pages: [],
     },
-     {
+    {
       year: 1995,
       text: 'Test',
       pages: [],
