@@ -4,9 +4,10 @@ import Image from 'next/image';
 
 const ListingCard = ({ item }: { item: BirthItem }) => {
   const person = item.pages[0];
-  return (
+
+  return person ? (
     <a href={person.content_urls.desktop.page} className={styles.item} target="_blank">
-      {item.text}
+      <div className={styles.text}>{item.text} (b. {item.year})</div>
       {person.thumbnail && (
         <Image
           className={styles.image}
@@ -15,8 +16,12 @@ const ListingCard = ({ item }: { item: BirthItem }) => {
           width={person.thumbnail.width}
           height={person.thumbnail.height}
         />
-      )}
+      )} 
     </a>
+  ) : (
+    <div className={styles.item}>
+      <div className={styles.text}>{item.text} (b. {item.year})</div>
+    </div>
   );
 };
 

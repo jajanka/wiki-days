@@ -14,7 +14,11 @@
   transition: border 0.1s ease-in;
 
   &:hover {
-    border: 2px solid black;
+    border: 2px solid var(--background);
+
+    .image {
+      transform: scale(0.98);
+    }
   }
 }
 
@@ -22,5 +26,23 @@
   width: auto;
   max-width: 36px;
   height: auto;
+  max-height: 52px;
   border-radius: 8px;
+  transition: transform 0.1s ease-in;
+}
+
+.text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.2;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
 }

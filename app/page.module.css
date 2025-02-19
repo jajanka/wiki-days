@@ -22,6 +22,11 @@
   }
 }
 
+.original-error {
+  font-size: 14px;
+  font-weight: 300;
+}
+
 @media (min-width: 768px) {
   .title {
     font-size: 48px;

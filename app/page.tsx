@@ -49,8 +49,10 @@ export default function Home() {
         onClose={() => setError(null)}
         title="Could not fetch birthdays"
       >
-        <p>There was an error fetching birthdays. Please try again later.</p>
-        <p>{error}</p>
+        <>
+          <div>There was an error fetching birthdays. Please try again later.</div>
+          <div className={styles['original-error']}>({error})</div>
+        </>
       </Modal>
     </>
   );

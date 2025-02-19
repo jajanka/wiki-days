@@ -28,7 +28,6 @@ const BirthdayAction = () => {
       })
       .then((response) => {
         setBirthdays(response.data);
-        // setBirthdays({ births: [] });
       })
       .catch((error) => {
         setError(error.message || 'An error occurred');
