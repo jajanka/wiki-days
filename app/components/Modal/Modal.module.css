@@ -32,7 +32,7 @@
   cursor: pointer;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .overlay {
     align-items: center;
   }

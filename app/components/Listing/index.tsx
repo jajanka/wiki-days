@@ -13,8 +13,6 @@ type ListingProps = {
 };
 
 const Listing = ({ items, pageNumber, itemsPerPage = ITEMS_PER_PAGE }: ListingProps) => {
-  const totalItems = items.births.length;
-
   const paginatedBirthdays = useCallback(() => {
     const startIndex = (pageNumber - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;

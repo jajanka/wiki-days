@@ -2,47 +2,17 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
-import { fetchBirthdays } from '@/app/lib/services';
 import useStore from '@/app/providers/store';
+import BirthdayAction from './components/BirthdayAction';
 import Pagination from './components/Pagination';
 import Listing from './components/Listing';
 import Modal from './components/Modal';
-import axios, { CancelTokenSource } from 'axios';
-import { geCurrentMonthAndDate, getDateString } from './lib/utils';
-import { WIKI_BIRTH_URL } from './lib/constants';
 
 export default function Home() {
-  const setLoading = useStore((state) => state.setLoading);
-  const setBirthdays = useStore((state) => state.setBirthdays);
+  const setError = useStore((state) => state.setError);
   const birthdays = useStore((state) => state.birthdays);
+  const error = useStore((state) => state.error);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  let cancelToken: CancelTokenSource;
-
-  const handleFetchBirthdays = async () => {
-    setLoading(true);
-
-    if (cancelToken) {
-      cancelToken.cancel('Operation canceled by the user.');
-    }
-
-    cancelToken = axios.CancelToken.source();
-
-    axios
-      .get(`${WIKI_BIRTH_URL}${geCurrentMonthAndDate()}`, {
-        cancelToken: cancelToken.token,
-      })
-      .then((response) => {
-        setBirthdays(response.data);
-        // setBirthdays({ births: [] });
-      })
-      .catch((error) => {
-        setIsModalOpen(true);
-        console.log(error.message);
-      })
-      .finally(() => setLoading(false));
-  };
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -55,20 +25,14 @@ export default function Home() {
       >
         Notable birthdays on this day
       </div>
-      {!birthdays && (
-        <div className={styles.container}>
-          <button className="btn btn-full" onClick={handleFetchBirthdays}>
-            Get Birthdays
-          </button>
-          <div className={styles['date-title']}>{getDateString()}</div>
-        </div>
-      )}
 
-      {birthdays && birthdays.births.length < 1 && (
-        <div className={styles.container}>
+      <div className={styles.container}>
+        {!birthdays && <BirthdayAction />}
+
+        {birthdays && birthdays.births.length < 1 && (
           <div className={styles.noData}>No data available</div>
-        </div>
-      )}
+        )}
+      </div>
 
       {birthdays && birthdays.births.length > 0 && (
         <>
@@ -81,11 +45,12 @@ export default function Home() {
         </>
       )}
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={error !== null}
+        onClose={() => setError(null)}
         title="Could not fetch birthdays"
       >
         <p>There was an error fetching birthdays. Please try again later.</p>
+        <p>{error}</p>
       </Modal>
     </>
   );
