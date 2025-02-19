@@ -7,7 +7,7 @@ const ListingCard = ({ item }: { item: BirthItem }) => {
 
   return person ? (
     <a href={person.content_urls.desktop.page} className={styles.item} target="_blank">
-      <div className={styles.text}>{item.text} (b. {item.year})</div>
+      <div className={styles.text}>{`${item.text} (b. ${item.year})`}</div>
       {person.thumbnail && (
         <Image
           className={styles.image}
@@ -16,11 +16,11 @@ const ListingCard = ({ item }: { item: BirthItem }) => {
           width={person.thumbnail.width}
           height={person.thumbnail.height}
         />
-      )} 
+      )}
     </a>
   ) : (
     <div className={styles.item}>
-      <div className={styles.text}>{item.text} (b. {item.year})</div>
+      <div className={styles.text}>{`${item.text} (b. ${item.year})`}</div>
     </div>
   );
 };
