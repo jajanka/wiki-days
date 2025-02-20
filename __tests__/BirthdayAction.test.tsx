@@ -3,6 +3,8 @@ import '@testing-library/jest-dom';
 import BirthdayAction from '@/app/components/BirthdayAction';
 import mockAxios from 'jest-mock-axios';
 import useStore from '@/app/providers/store';
+import { geCurrentMonthAndDate } from '@/app/lib/utils';
+import { WIKI_BIRTH_URL } from '@/app/lib/constants';
 
 jest.mock('../app/providers/store', () => {
   const zustand = jest.requireActual('zustand');
@@ -28,7 +30,8 @@ describe('Action', () => {
 
     expect(useStore.getState().setLoading).toHaveBeenCalledWith(true);
 
-    expect(mockAxios.get).toHaveBeenCalledWith(expect.any(String), {
+    const callUrl = `${WIKI_BIRTH_URL}${geCurrentMonthAndDate()}`;
+    expect(mockAxios.get).toHaveBeenCalledWith(callUrl, {
       cancelToken: expect.any(Object),
     });
     mockAxios.mockResponse(mockedResponse);
